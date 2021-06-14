@@ -10,8 +10,8 @@ USER louis
 
 RUN wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz && tar -xzf steamcmd_linux.tar.gz \
     && rm steamcmd_linux.tar.gz && ./steamcmd.sh +quit
-RUN mkdir -p .steam/sdk32/ && ln -s /home/l4d2/linux32/steamclient.so .steam/sdk32/steamclient.so \
-    && mkdir -p .steam/sdk64/ && ln -s /home/l4d2/linux64/steamclient.so .steam/sdk64/steamclient.so
+RUN mkdir -p .steam/sdk32/ && ln -s linux32/steamclient.so .steam/sdk32/steamclient.so \
+    && mkdir -p .steam/sdk64/ && ln -s linux64/steamclient.so .steam/sdk64/steamclient.so
 RUN ./steamcmd.sh +login anonymous +force_install_dir ./l4d2 +app_update 222860 +quit
 
 EXPOSE 27015/tcp
