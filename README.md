@@ -11,7 +11,7 @@ To change the port used inside the container change the `PORT` environment varia
 ## Hostname
 This identifies your server in the server browser.  By default it is set to "Left4DevOps L4D2".  Change it by setting the `HOSTNAME` environment variable.
 
-e.g. If your server was in Europe:
+e.g. To change your hostname to BILLS HERE:
 
 `docker run -e HOSTNAME="BILLS HERE"`...
 
