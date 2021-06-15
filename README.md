@@ -1,7 +1,5 @@
 # Left 4 Dead 2 Server Docker Image
 
-The 
-
 ## Ports
 By default, you'll want to allow both incoming TCP and UDP traffic on port 27015. 
 
