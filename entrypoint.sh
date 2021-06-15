@@ -4,7 +4,7 @@
 
 # Server Config
 cat > l4d2/left4dead2/cfg/server.cfg <<EOF
-hostname ${HOSTNAME}
+hostname "${HOSTNAME}"
 sv_region ${REGION}
 sv_logecho 1
 EOF
