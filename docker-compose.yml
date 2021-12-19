@@ -1,10 +1,14 @@
-version: 3.8
+version: 1.0
 services:
   l4d2:
-    image: left4devops/l4d2
+    image: morzlee/l4d2
     ports:
+    - "2333:2333"
+    - "2333:2333/udp"
     - "27015:27015"
     - "27015:27015/udp"
+    - "2334:2334"
+    - "2334:2334/udp"
     environment:
-      - HOSTNAME=L4D2
-      - REGION=255
+      - HOSTNAME=leo
+      - REGION=4
