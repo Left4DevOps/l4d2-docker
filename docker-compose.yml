@@ -11,4 +11,4 @@ services:
     - "2334:2334/udp"
     environment:
       - HOSTNAME=leo
-      - REGION=4
+      - REGION=255
