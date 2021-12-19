@@ -12,3 +12,4 @@ services:
     environment:
       - HOSTNAME=leo
       - REGION=255
+      - PLUGIN=anna
