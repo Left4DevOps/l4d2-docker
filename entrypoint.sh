@@ -8,11 +8,13 @@
 ln  -s  /map/*  l4d2/left4dead2/addons/
 
 # Server Config
-cat > l4d2/left4dead2/cfg/server.cfg <<EOF
-hostname "${HOSTNAME}"
-sv_region ${REGION}
-sv_logecho 1
-EOF
+if "$plugin"= "anna"; then
+    git clone https://github.com/fantasylidong/AnneServer
+    cp -r neko/* l4d2/
+    
+if "$plugin"= "hexo"; then
+    git clone https://github.com/fantasylidong/anna.git
+    cp -r neko/* l4d2/
 
 # Start Game
 cd l4d2 && ./srcds_run -console -game left4dead2 -port "$PORT" +maxplayers "$PLAYERS" +map "$MAP"
