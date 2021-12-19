@@ -25,7 +25,8 @@ ENV PORT=2333 \
     PLAYERS=8 \
     MAP="c2m1_highway" \
     REGION=255 \
-    HOSTNAME="leo mutation4"
+    HOSTNAME="leo fighting" \
+    plugin="anna"
 
 ADD entrypoint.sh entrypoint.sh
 ENTRYPOINT ./entrypoint.sh
