@@ -3,7 +3,7 @@
 ## Ports
 By default, you'll want to allow both incoming TCP and UDP traffic on port 27015. 
 
-`docker run -p 27015:27015/tcp -p 27015:27015/udp --name l4d2 left4devops/l4d2`
+`docker run -p 27015:27015/tcp -p 27015:27015/udp --name l4d2 morzlee/l4d2`
 
 ### Changing the port
 To change the port used inside the container change the `PORT` environment variable, then map the new ports instead.
