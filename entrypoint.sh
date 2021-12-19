@@ -12,7 +12,7 @@ if "$plugin"= "anna"; then
     git clone https://github.com/fantasylidong/AnneServer
     cp -r neko/* l4d2/
     
-if "$plugin"= "hexo"; then
+if "$plugin"= "neko"; then
     git clone https://github.com/fantasylidong/neko.git
     cp -r neko/* l4d2/
 
