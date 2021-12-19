@@ -9,12 +9,10 @@ ln  -s  /map/*  l4d2/left4dead2/addons/
 
 # Server Config
 if "$plugin"= "anna"; then
-    git clone https://github.com/fantasylidong/AnneServer
-    cp -r neko/* l4d2/
+    cp -r AnnaServer/* l4d2/
     
 if "$plugin"= "neko"; then
-    git clone https://github.com/fantasylidong/neko.git
-    cp -r neko/* l4d2/
+    cp -r neko/* l4d2/left4dead2/
 
 # Start Game
 cd l4d2 && ./srcds_run -console -game left4dead2 -tickrate 100 -port "$PORT" +maxplayers "$PLAYERS" +map "$MAP"
