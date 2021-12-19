@@ -34,6 +34,12 @@ e.g. If your server was in Europe:
 
 `docker run -e REGION=3`...
 
+## plugins type
+There are two types plugins to choose.
+One plugins package is anna, other is neko.
+anna github address: https://github.com/Caibiii/AnneServer
+neko github address: https://github.com/himenekocn/NekoSpecials-L4D2
+
 ## Custom Addons
 Softlink l4d2 maps to addons folder.
 It would more convenience while you want add custom map. Exspecially when you have sourcemod plugins.
