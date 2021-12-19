@@ -13,7 +13,7 @@ if "$plugin"= "anna"; then
     cp -r neko/* l4d2/
     
 if "$plugin"= "hexo"; then
-    git clone https://github.com/fantasylidong/anna.git
+    git clone https://github.com/fantasylidong/neko.git
     cp -r neko/* l4d2/
 
 # Start Game
