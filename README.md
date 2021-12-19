@@ -35,6 +35,6 @@ e.g. If your server was in Europe:
 `docker run -e REGION=3`...
 
 ## Custom Addons
-Softlink l4d2 maps to addons folder
-It would more convenience while you want add custom map. Exspecially when you have sourcemod plugins
+Softlink l4d2 maps to addons folder.
+It would more convenience while you want add custom map. Exspecially when you have sourcemod plugins.
 you just need mount your extra map folder to docker container /map . 
