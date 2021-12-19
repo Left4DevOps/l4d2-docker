@@ -35,8 +35,6 @@ e.g. If your server was in Europe:
 `docker run -e REGION=3`...
 
 ## Custom Addons
-If you wanted to play a custom campaign on your server, you can mount a directory with any custom content into the `/home/louis/l4d2/left4dead2/addons/` directory.
-
-e.g. If your working directory had a TourOfTerror folder:
-
-`docker run -v TourOfTerror:/home/louis/l4d2/left4dead2/addons/`...
+Softlink l4d2 maps to addons folder
+It would more convenience while you want add custom map. Exspecially when you have sourcemod plugins
+you just need mount your extra map folder to docker container /map . 
