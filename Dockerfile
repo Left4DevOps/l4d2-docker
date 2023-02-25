@@ -26,3 +26,8 @@ ENV MAP=$DEFAULT_MAP \
 
 ADD entrypoint.sh entrypoint.sh
 ENTRYPOINT ./entrypoint.sh
+
+FROM game AS incremental
+USER root
+RUN yum -y update --security
+USER louis
