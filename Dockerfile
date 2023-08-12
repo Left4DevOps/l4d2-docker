@@ -12,6 +12,7 @@ USER louis
 
 FROM base AS game
 ADD as-user.sh .
+ADD --chown=louis:louis https://media.steampowered.com/installer/steamcmd_linux.tar.gz .
 RUN ./as-user.sh
 
 EXPOSE 27015/tcp
