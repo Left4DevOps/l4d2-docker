@@ -1,4 +1,4 @@
-FROM amazonlinux:2 AS base
+FROM  rockylinux:9 AS base
 
 ARG GAME_ID=222860
 ARG INSTALL_DIR="l4d2"
