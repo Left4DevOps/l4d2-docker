@@ -25,8 +25,13 @@ EOF
     if [ -n "${RCON_PASSWORD}" ]; then
         echo "rcon_password \"${RCON_PASSWORD}\"" >> "${CONFIG_FILE}"
     fi
+    if [ "${STEAM_GROUP}" -gt 0 ]; then
+        echo "sv_steamgroup ${STEAM_GROUP}" >> "${CONFIG_FILE}"
+        if [ "${STEAM_GROUP_EXCLUSIVE}" ] ; then
+          echo "sv_steamgroup_exclusive 1" >> "${CONFIG_FILE}"
+        fi
+    fi
 fi
-
 
 # Start Game
 if [ $# -eq 0 ]; then

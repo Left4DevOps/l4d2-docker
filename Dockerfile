@@ -1,9 +1,5 @@
 FROM rockylinux:9 AS base
 
-ARG GAME_ID=222860
-ARG INSTALL_DIR="l4d2"
-ARG DEFAULT_MAP="c14m1_junkyard"
-
 ADD as-root.sh .
 RUN ./as-root.sh
 
@@ -11,9 +7,10 @@ WORKDIR /home/louis
 USER louis
 
 FROM base AS game
-ADD as-user.sh .
-ADD --chown=louis:louis https://media.steampowered.com/installer/steamcmd_linux.tar.gz .
-RUN ./as-user.sh
+
+ARG GAME_ID=222860
+ARG INSTALL_DIR="l4d2"
+ARG DEFAULT_MAP="c14m1_junkyard"
 
 EXPOSE 27015/tcp
 EXPOSE 27015/udp
@@ -23,12 +20,17 @@ ENV MAP=$DEFAULT_MAP \
     HOSTNAME="Left4DevOps" \
     REGION=255 \
     GAME_ID=$GAME_ID \
-    INSTALL_DIR=$INSTALL_DIR
+    INSTALL_DIR=$INSTALL_DIR \
+    STEAM_GROUP=0
 
-ADD entrypoint.sh entrypoint.sh
+ADD as-user.sh .
+RUN ./as-user.sh
+
+ADD entrypoint.sh .
 ENTRYPOINT ./entrypoint.sh
 
 FROM game AS incremental
 USER root
 RUN yum -y update --security
+
 USER louis
