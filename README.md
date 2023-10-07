@@ -36,7 +36,7 @@ To help hint to Steam where your server is located, set the `REGION` environment
 e.g. If your server was in Europe - `docker run -e REGION=3`...
 
 ### STEAM_GROUP
-Make your server easier to join by providing the ID of your Steam Group as shown on the admin page.
+Make your server easier to join by providing the ID of your Steam Group as shown on the admin page. You can also set `STEAM_GROUP_EXCLUSIVE=true` to reduce the chances of your server being used by other people.
 
 ### RCON_PASSWORD
 If you would like to remote control the server without using SourceMod, set an RCON password using the `RCON_PASSWORD` environment variable. Once you are connected to the server, use the developer console to set `rcon_password` and then `rcon`.
