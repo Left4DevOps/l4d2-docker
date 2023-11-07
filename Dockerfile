@@ -28,9 +28,3 @@ RUN ./as-user.sh
 
 ADD entrypoint.sh .
 ENTRYPOINT ./entrypoint.sh
-
-FROM game AS incremental
-USER root
-RUN yum -y update --security
-
-USER louis
