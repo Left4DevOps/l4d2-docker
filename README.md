@@ -48,21 +48,21 @@ If you would like to remote control the server without using SourceMod, set an R
 ## Custom Config
 You can skip the config created by environment vars by mounting in your own server.cfg
 
-e.g. `docker run -v server.cfg:/home/louis/l4d2/left4dead2/cfg/server.cfg`...
-
-## Joining a game
-There are a couple of ways you can achieve this:
-* Start a lobby, then as host, open the developer console and type `mm_dedicated_force_servers [ip:port]`. This will try to use your server when the game starts.
-* Using the developer console , you can connect directly to the server if a lot is free`connect  [ip:port]`
-* Add the server as a favourite using the server browser `openserverbrowser` in game. This will make it appear as a steam group server in the menu.
-* Set the `STEAM_GROUP` variable and choose to start the game from a Steam Group server in your lobby.
+e.g. `docker run -v server.cfg:/cfg/server.cfg`...
 
 ## Custom Addons
 If you wanted to play a custom campaign on your server, or include sourcemod, you can mount a directory with any custom content into the `/home/louis/l4d2/left4dead2/addons/` directory.
 
 e.g. If your working directory had a addons folder:
 
-`docker run -v $pwd/addons:/home/louis/l4d2/left4dead2/addons/`...
+`docker run -v $pwd/addons:/addons/`...
+
+## Joining a game
+There are a couple of ways you can achieve this:
+* Start a lobby, then as host, open the developer console and type `mm_dedicated_force_servers [ip:port]`. This will try to use your server when the game starts.
+* Using the developer console, you can connect directly to the server `connect [ip:port]`
+* Add the server as a favourite using the server browser `openserverbrowser` in game. This will make it appear as a steam group server in the menu.
+* Set the `STEAM_GROUP` variable and choose to start the game from a Steam Group server in your lobby.
 
 ## Alternate command line options
 Any commands sent to the docker will replace the default commands line options for `./srcds_run`

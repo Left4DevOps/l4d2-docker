@@ -26,5 +26,7 @@ ENV MAP=$DEFAULT_MAP \
 ADD as-user.sh .
 RUN ./as-user.sh
 
+VOLUME ["/addons", "/cfg"]
+
 ADD entrypoint.sh .
 ENTRYPOINT ./entrypoint.sh

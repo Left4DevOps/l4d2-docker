@@ -4,3 +4,6 @@ microdnf -y update
 microdnf clean all
 
 useradd louis
+
+mkdir /addons /cfg
+chown louis:louis /addons /cfg
