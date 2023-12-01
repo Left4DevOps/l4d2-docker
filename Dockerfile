@@ -1,4 +1,4 @@
-FROM rockylinux:9-minimal AS base
+FROM rockylinux/rockylinux:9-minimal AS base
 
 ADD as-root.sh .
 RUN ./as-root.sh
