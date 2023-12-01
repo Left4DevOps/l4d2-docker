@@ -1,6 +1,9 @@
 #!/bin/bash
-yum -y install libstdc++.i686 SDL2.i686 glibc-langpack-en
-
-yum -y update --security
+microdnf -y install SDL2.i686 libcurl.i686 glibc-langpack-en tar
+microdnf -y update
+microdnf clean all
 
 useradd louis
+
+mkdir /addons /cfg
+chown louis:louis /addons /cfg
