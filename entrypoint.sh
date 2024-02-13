@@ -5,14 +5,7 @@
 cd "${INSTALL_DIR}" || exit 50
 
 # Server Config
-if [ "${INSTALL_DIR}" = "l4d2" ]; then
-    CONFIG_DIR="left4dead2/cfg"
-elif [ "${INSTALL_DIR}" = "l4d" ]; then
-    CONFIG_DIR="left4dead/cfg"
-else
-  exit 100
-fi
-CONFIG_FILE="${CONFIG_DIR}/server.cfg"
+CONFIG_FILE="/cfg/server.cfg"
 if [ -f "${CONFIG_FILE}" ]; then
     echo "server.cfg already exists"
 else
