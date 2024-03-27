@@ -1,7 +1,4 @@
 #!/bin/bash
-
-# Update Game
-./steamcmd.sh +force_install_dir "./${INSTALL_DIR}" +login anonymous +app_update "${GAME_ID}" +quit
 cd "${INSTALL_DIR}" || exit 50
 
 # Server Config
@@ -28,7 +25,7 @@ fi
 
 # Start Game
 if [ $# -eq 0 ]; then
-    ./srcds_run -port "$PORT" +map "$MAP"
+    ./srcds_run -autoupdate -steam_dir ~ -steamcmd_script ~/update.txt -port "$PORT" +map "$MAP"
 else
     ./srcds_run "$@"
 fi

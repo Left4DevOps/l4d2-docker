@@ -18,4 +18,8 @@ ln -s ~/linux32/steamclient.so ~/.steam/sdk32/steamclient.so
 curl https://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -xzvf -
 
 # Install game
-./steamcmd.sh +force_install_dir "./${INSTALL_DIR}" +login anonymous +app_update "${GAME_ID}" +quit
+echo """force_install_dir "/home/louis/${INSTALL_DIR}"
+login anonymous
+app_update "${GAME_ID}"
+quit""" > update.txt
+./steamcmd.sh  +runscript update.txt
