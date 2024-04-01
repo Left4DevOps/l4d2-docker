@@ -5,7 +5,7 @@ This repository can be used to build Left 4 Dead 1 + 2 as separate images.
 ## Quickstart
 By default, you'll want to allow both incoming TCP and UDP traffic on port 27015.
 
-`docker run -p 27015:27015/tcp -p 27015:27015/udp --name l4d2 left4devops/l4d2`
+`docker run -p 27015:27015/tcp -p 27015:27015/udp --name l4d2 --cap-add=NET_ADMIN left4devops/l4d2`
 
 ## Environment Variables
 ### PORT
