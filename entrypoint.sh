@@ -1,32 +1,28 @@
 #!/bin/bash
 cd "${INSTALL_DIR}" || exit 50
 
-# Server Config
-CONFIG_FILE="/cfg/server.cfg"
-if [ -f "${CONFIG_FILE}" ]; then
-    echo "server.cfg already exists"
+if [ $# -gt 0 ]; then
+    ./srcds_run "$@"
 else
-    cat > "${CONFIG_FILE}" <<EOF
-hostname "${HOSTNAME}"
-sv_region ${REGION}
-sv_logecho 1
-motd_enabled 0
-EOF
+    STARTUP=("./srcds_run")
+    STARTUP+=("-port $PORT")
+    STARTUP+=("+map $MAP")
+    STARTUP+=("-autoupdate -steam_dir ~ -steamcmd_script ~/update.txt") #Auto update
+    STARTUP+=("+sv_logecho 1")
+    STARTUP+=("+hostname ${HOSTNAME}")
+    STARTUP+=("+sv_region ${REGION}")
+    STARTUP+=("+motd_enabled 0")
+
     if [ -n "${RCON_PASSWORD}" ]; then
-        echo "rcon_password \"${RCON_PASSWORD}\"" >> "${CONFIG_FILE}"
+        STARTUP+=("+rcon_password \"${RCON_PASSWORD}\"")
     fi
+
     if [ "${STEAM_GROUP}" -gt 0 ]; then
-        echo "sv_steamgroup ${STEAM_GROUP}" >> "${CONFIG_FILE}"
+        STARTUP+=("+sv_steamgroup ${STEAM_GROUP}")
         if [ "${STEAM_GROUP_EXCLUSIVE}" ] ; then
-          echo "sv_steamgroup_exclusive 1" >> "${CONFIG_FILE}"
+            STARTUP+=("+sv_steamgroup_exclusive 1")
         fi
     fi
-fi
 
-# Start Game
-if [ $# -eq 0 ]; then
-    ./srcds_run -autoupdate -steam_dir ~ -steamcmd_script ~/update.txt -port "$PORT" +map "$MAP"
-else
-    ./srcds_run "$@"
+    ${STARTUP[*]}
 fi
-
