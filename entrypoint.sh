@@ -9,7 +9,7 @@ else
     STARTUP+=("+map $MAP")
     STARTUP+=("-autoupdate -steam_dir $HOME -steamcmd_script $HOME/update.txt") #Auto update
     STARTUP+=("+sv_logecho 1")
-    STARTUP+=("+hostname ${HOSTNAME}")
+    STARTUP+=("+hostname \"${HOSTNAME}\"")
     STARTUP+=("+sv_region ${REGION}")
     STARTUP+=("+motd_enabled 0")
 
