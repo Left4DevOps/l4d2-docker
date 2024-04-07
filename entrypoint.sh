@@ -7,7 +7,7 @@ else
     STARTUP=("./srcds_run")
     STARTUP+=("-port $PORT")
     STARTUP+=("+map $MAP")
-    STARTUP+=("-autoupdate -steam_dir ~ -steamcmd_script ~/update.txt") #Auto update
+    STARTUP+=("-autoupdate -steam_dir $HOME -steamcmd_script $HOME/update.txt") #Auto update
     STARTUP+=("+sv_logecho 1")
     STARTUP+=("+hostname ${HOSTNAME}")
     STARTUP+=("+sv_region ${REGION}")
