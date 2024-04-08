@@ -24,5 +24,12 @@ else
         fi
     fi
 
+    if [ "${NET_CON_PORT:-0}" -gt 0 ]; then
+        STARTUP+=("-netconport ${NET_CON_PORT}")
+        if [ -n "${NET_CON_PASSWORD} "]; then
+            STARTUP+=("-netconpassword \"${NET_CON_PASSWORD}\"")
+        fi
+    fi
+
     ${STARTUP[*]}
 fi
