@@ -28,4 +28,4 @@ RUN ./as-user.sh
 VOLUME ["/addons", "/cfg"]
 
 ADD entrypoint.sh .
-ENTRYPOINT ./entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
