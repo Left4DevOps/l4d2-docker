@@ -6,8 +6,7 @@ if [ $# -gt 0 ]; then
 else
     STARTUP=("./srcds_run")
     STARTUP+=("-autoupdate -steam_dir $HOME -steamcmd_script $HOME/update.txt")
-    STARTUP+=("-port $PORT")
-    STARTUP+=("+map $MAP")
+    STARTUP+=("+map \"$DEFAULT_MAP $DEFAULT_MODE\"")
     STARTUP+=("+sv_logecho 1")
     STARTUP+=("+hostname \"${HOSTNAME}\"")
     STARTUP+=("+sv_region ${REGION}")
