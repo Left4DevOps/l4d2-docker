@@ -30,5 +30,11 @@ else
         fi
     fi
 
+    if [ "${FORK:-0}" -gt 0 ]; then
+        STARTUP+=("-fork ${FORK} +exec server##.cfg")
+    else
+        STARTUP+=("-port $PORT")
+    fi
+
     ${STARTUP[*]}
 fi
