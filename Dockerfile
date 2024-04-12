@@ -14,18 +14,19 @@ ARG DEFAULT_MAP="c14m1_junkyard"
 
 EXPOSE 27015/tcp 27015/udp
 
-ENV MAP=$DEFAULT_MAP \
+ADD as-user.sh .
+RUN ./as-user.sh
+
+VOLUME ["/addons", "/cfg"]
+
+ENV DEFAULT_MAP=$DEFAULT_MAP \
+    DEFAULT_MODE="coop" \
     PORT=27015 \
     HOSTNAME="Left4DevOps" \
     REGION=255 \
     GAME_ID=$GAME_ID \
     INSTALL_DIR=$INSTALL_DIR \
     STEAM_GROUP=0
-
-ADD as-user.sh .
-RUN ./as-user.sh
-
-VOLUME ["/addons", "/cfg"]
 
 ADD entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
