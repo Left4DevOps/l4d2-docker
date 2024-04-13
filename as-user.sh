@@ -5,7 +5,7 @@ if [ "${INSTALL_DIR}" = "l4d2" ]; then
 elif [ "${INSTALL_DIR}" = "l4d" ]; then
     GAME_DIR="${INSTALL_DIR}/left4dead"
 else
-  exit 100
+    exit 100
 fi
 
 mkdir -p ./"${GAME_DIR}"
@@ -22,4 +22,4 @@ echo """force_install_dir "/home/louis/${INSTALL_DIR}"
 login anonymous
 app_update "${GAME_ID}"
 quit""" > update.txt
-./steamcmd.sh  +runscript update.txt
+./steamcmd.sh +runscript update.txt

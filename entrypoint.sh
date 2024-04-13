@@ -1,32 +1,48 @@
 #!/bin/bash
+# Auto update flag not working on L4D
+if [ "${INSTALL_DIR}" = "l4d" ]; then
+    ./steamcmd.sh +runscript update.txt
+fi
+
 cd "${INSTALL_DIR}" || exit 50
 
-# Server Config
-CONFIG_FILE="/cfg/server.cfg"
-if [ -f "${CONFIG_FILE}" ]; then
-    echo "server.cfg already exists"
+if [ $# -gt 0 ]; then
+    ./srcds_run "$@"
 else
-    cat > "${CONFIG_FILE}" <<EOF
-hostname "${HOSTNAME}"
-sv_region ${REGION}
-sv_logecho 1
-motd_enabled 0
-EOF
+    STARTUP=("./srcds_run")
+    STARTUP+=("+map \"$DEFAULT_MAP $DEFAULT_MODE\"")
+    STARTUP+=("+sv_logecho 1")
+    STARTUP+=("+hostname \"${HOSTNAME}\"")
+    STARTUP+=("+sv_region ${REGION}")
+    STARTUP+=("+motd_enabled 0")
+
+    if [ "${INSTALL_DIR}" = "l4d2" ]; then
+            STARTUP+=("-autoupdate -steam_dir $HOME -steamcmd_script $HOME/update.txt")
+        fi
+
     if [ -n "${RCON_PASSWORD}" ]; then
-        echo "rcon_password \"${RCON_PASSWORD}\"" >> "${CONFIG_FILE}"
+        STARTUP+=("+rcon_password \"${RCON_PASSWORD}\"")
     fi
+
     if [ "${STEAM_GROUP}" -gt 0 ]; then
-        echo "sv_steamgroup ${STEAM_GROUP}" >> "${CONFIG_FILE}"
+        STARTUP+=("+sv_steamgroup ${STEAM_GROUP}")
         if [ "${STEAM_GROUP_EXCLUSIVE}" ] ; then
-          echo "sv_steamgroup_exclusive 1" >> "${CONFIG_FILE}"
+            STARTUP+=("+sv_steamgroup_exclusive 1")
         fi
     fi
-fi
 
-# Start Game
-if [ $# -eq 0 ]; then
-    ./srcds_run -autoupdate -steam_dir ~ -steamcmd_script ~/update.txt -port "$PORT" +map "$MAP"
-else
-    ./srcds_run "$@"
-fi
+    if [ "${NET_CON_PORT:-0}" -gt 0 ]; then
+        STARTUP+=("-netconport ${NET_CON_PORT}")
+        if [ -n "${NET_CON_PASSWORD}" ]; then
+            STARTUP+=("-netconpassword \"${NET_CON_PASSWORD}\"")
+        fi
+    fi
 
+    if [ "${FORK:-0}" -gt 0 ]; then
+        STARTUP+=("-fork ${FORK} +exec server##.cfg")
+    else
+        STARTUP+=("-port $PORT")
+    fi
+
+    ${STARTUP[*]}
+fi
