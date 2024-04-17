@@ -2,9 +2,4 @@ version: '3.8'
 services:
   l4d2:
     image: left4devops/l4d2
-    ports:
-    - "27015:27015"
-    - "27015:27015/udp"
-    environment:
-      - HOSTNAME=L4D2
-      - REGION=255
+    network_mode: host
