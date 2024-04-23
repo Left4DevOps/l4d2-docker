@@ -52,6 +52,32 @@ left4devops/l4d2
 This section is in draft, see the [discussion here](https://github.com/Left4DevOps/l4d2-docker/issues/6) for more
 detail.
 
+## Joining a game
+
+There are a couple of ways you can achieve this:
+
+* Start a lobby, then as host, set the server type to **Best Available Dedicated**, open the developer console and
+  type `mm_dedicated_force_servers [ip:port]`. This will try to use your server when the game starts.
+* Set the `STEAM_GROUP` variable and choose to start the game from a Steam Group server in your lobby.
+* Add the server as a favourite using the server browser `openserverbrowser` in game. This will make it appear as a
+  steam group server in the menu.
+* Using the developer console, you can connect directly to the server `connect [ip:port]`
+* You can also open the Server Browser from steam under **View** > **Game Servers**.
+* Servers on your LAN will be shown as Steam Group servers automatically
+
+## Custom Addons
+
+If you wanted to play a custom campaign on your server, or include sourcemod, you can mount a directory with any custom
+content into the `/addons/` directory.
+
+e.g. If your working directory had a addons folder:
+
+```shell
+docker run --name l4d2-server-addons \
+    -v $(pwd)/addons:/addons/
+left4devops/l4d2
+```
+
 ## Configuration
 
 ### Environment Variables
@@ -223,7 +249,7 @@ docker run --name l4d2-lan \
 left4devops/l4d2
 ```
 
-#### RCON
+#### RCON_PASSWORD
 
 > Son, we're immune, we're tired, and there's infected in the damn woods. Now cut the shit and let us in!
 
@@ -268,6 +294,7 @@ You could then connect using your telnet client:
 telnet localhost 17015
 ```
 
+##### NET_CON_PASSWORD
 To set a net con password:
 
 ```shell
@@ -301,16 +328,6 @@ docker run --name l4d2-args \
 left4devops/l4d2
 ```
 
-### Command line replacement
-
-You can completely replace the guided environment variable configuration by providing arguments when starting the
-container
-
-```shell
-docker run --name l4d2-command-line \
-left4devops/l4d2 +hostname "Vannah Hotel"
-```
-
 ### server.cfg
 
 `srcds_run` will look for a `server.cfg` file. If you have lots of config, store them in a file and mount it to
@@ -322,28 +339,13 @@ docker run --name l4d2-server-cfg \
 left4devops/l4d2
 ```
 
-## Custom Addons
+### Command line replacement
 
-If you wanted to play a custom campaign on your server, or include sourcemod, you can mount a directory with any custom
-content into the `/addons/` directory.
-
-e.g. If your working directory had a addons folder:
+You can completely replace the guided environment variable configuration by providing arguments when starting the
+container
 
 ```shell
-docker run --name l4d2-server-addons \
-    -v $(pwd)/addons:/addons/
-left4devops/l4d2
+docker run --name l4d2-command-line \
+left4devops/l4d2 +hostname "Vannah Hotel"
 ```
 
-## Joining a game
-
-There are a couple of ways you can achieve this:
-
-* Start a lobby, then as host, set the server type to **Best Available Dedicated**, open the developer console and
-  type `mm_dedicated_force_servers [ip:port]`. This will try to use your server when the game starts.
-* Set the `STEAM_GROUP` variable and choose to start the game from a Steam Group server in your lobby.
-* Add the server as a favourite using the server browser `openserverbrowser` in game. This will make it appear as a
-  steam group server in the menu.
-* Using the developer console, you can connect directly to the server `connect [ip:port]`
-* You can also open the Server Browser from steam under **View** > **Game Servers**.
-* Servers on your LAN will be shown as Steam Group servers automatically
