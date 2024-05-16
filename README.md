@@ -47,7 +47,7 @@ left4devops/l4d2
 
 ### Denial of Service Protection
 
-> "I hate elevators. I hate helicopters. I hate hospitals. And doctors and lawyers and cops..."
+> "But you know, as long as I have a Molotov I can make a firewall!"
 
 This section is in draft, see the [discussion here](https://github.com/Left4DevOps/l4d2-docker/issues/6) for more
 detail.
