@@ -27,15 +27,19 @@ else
     STARTUP+=("+hostname \"${HOSTNAME}\"")
     STARTUP+=("+sv_region ${REGION}")
 
-    STARTUP+=("+motd_enabled ${MOTD_ENABLED}")
-    if [ "${HOST_BANNER}" != "IGNORE" ]; then
-      echo "${HOST_BANNER}" > "${GAME_DIR}/myhost.txt"
+    STARTUP+=("+motd_enabled ${MOTD}")
+    if [ -n "${HOST_CONTENT}" ]; then
+      echo "${HOST_CONTENT}" > "${GAME_DIR}/myhost.txt"
     fi
-    STARTUP+=("+hostfile myhost.txt")
-    if [ "${MOTD}" != "IGNORE" ]; then
-      echo "${MOTD}" > "${GAME_DIR}/mymotd.txt"
+    if [[ -e "${GAME_DIR}/myhost.txt" ]]; then
+      STARTUP+=("+hostfile myhost.txt")
     fi
-    STARTUP+=("+motdfile mymotd.txt")
+    if [ -n "${MOTD_CONTENT}" ]; then
+      echo "${MOTD_CONTENT}" > "${GAME_DIR}/mymotd.txt"
+    fi
+    if [[ -e "${GAME_DIR}/mymotd.txt" ]]; then
+      STARTUP+=("+motdfile mymotd.txt")
+    fi
 
     if [ "${STEAM_GROUP}" -gt 0 ]; then
         STARTUP+=("+sv_steamgroup ${STEAM_GROUP}")
