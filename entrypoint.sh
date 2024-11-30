@@ -33,6 +33,9 @@ else
     fi
     if [[ -e "${GAME_DIR}/myhost.txt" ]]; then
       STARTUP+=("+hostfile myhost.txt")
+    else
+      echo "${HOSTNAME}" > "${GAME_DIR}/myhostname.txt"
+      STARTUP+=("+hostfile myhostname.txt")
     fi
     if [ -n "${MOTD_CONTENT}" ]; then
       echo "${MOTD_CONTENT}" > "${GAME_DIR}/mymotd.txt"
