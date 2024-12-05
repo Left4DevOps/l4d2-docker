@@ -11,11 +11,13 @@ FROM base AS game
 ARG GAME_ID=222860
 ARG INSTALL_DIR="l4d2"
 ARG DEFAULT_MAP="c14m1_junkyard"
+ARG STEAM_USER=anonymous
 
 EXPOSE 27015/tcp 27015/udp
 
 ADD as-user.sh .
-RUN ./as-user.sh
+RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
+    ./as-user.sh
 
 VOLUME ["/addons", "/cfg"]
 

@@ -19,7 +19,7 @@ curl https://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -xzvf 
 
 # Install game
 echo """force_install_dir "/home/louis/${INSTALL_DIR}"
-login anonymous
-app_update "${GAME_ID}"
+login ${STEAM_USER}
+app_update ${GAME_ID}
 quit""" > update.txt
 ./steamcmd.sh +runscript update.txt
