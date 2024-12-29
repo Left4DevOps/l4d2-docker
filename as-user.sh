@@ -20,6 +20,6 @@ ln -s /cfg    "./${GAME_DIR}/cfg"
 # Install game
 echo """force_install_dir "/home/louis/${INSTALL_DIR}"
 login anonymous
-app_update "${GAME_ID}"
+app_update ${GAME_ID}
 quit""" > update.txt
 ./steamcmd.sh +runscript update.txt
