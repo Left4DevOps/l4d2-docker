@@ -10,9 +10,7 @@ FROM base AS game
 
 ARG GAME_ID=222860 \
     INSTALL_DIR="l4d2" \
-    DEFAULT_MAP="c14m1_junkyard" \
-    HOST_CONTENT \
-    MOTD_CONTENT
+    DEFAULT_MAP="c14m1_junkyard"
 
 EXPOSE 27015/tcp 27015/udp
 
