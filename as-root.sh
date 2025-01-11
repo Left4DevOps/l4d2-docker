@@ -9,5 +9,5 @@ microdnf clean all
 
 useradd louis
 
-mkdir /addons /cfg /tmp/dumps
-chown louis:louis /addons /cfg /tmp/dumps
+mkdir             /addons /cfg /motd /tmp/dumps
+chown louis:louis /addons /cfg /motd /tmp/dumps

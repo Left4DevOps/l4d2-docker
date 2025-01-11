@@ -14,8 +14,10 @@ else
 fi
 
 mkdir -p ./"${GAME_DIR}"
-ln -s /addons "./${GAME_DIR}/addons"
-ln -s /cfg    "./${GAME_DIR}/cfg"
+ln -s /addons         "./${GAME_DIR}/addons"
+ln -s /cfg            "./${GAME_DIR}/cfg"
+ln -s /motd/host.txt  "./${GAME_DIR}/myhost.txt"
+ln -s /motd/motd.txt  "./${GAME_DIR}/mymotd.txt"
 
 # Install game
 echo """force_install_dir "/home/louis/${INSTALL_DIR}"
