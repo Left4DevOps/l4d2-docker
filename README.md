@@ -95,6 +95,22 @@ docker run --name l4d2-hostname \
 left4devops/l4d2
 ```
 
+#### MOTD
+Automatically show the message of the day when players connect. Enable/disabled using `1`/`0`. Off (`0`) by default. If
+you run a lot of gameplay mods on your server, it can gbe helpful to outline them here 
+
+#### HOST_CONTENT
+This is the slim banner shown at the top of the MOTD. In L4D1, it is also shown when players hold the `TAB` key.
+
+Can display plain text or a http URL. Neither game understands https (although L4D2 can redirect to a https url).
+
+By default, will show the hostname of your server. For simple banners, `HOST_CONTENT` using the environment variable.
+For more complex host banners, leave `HOST_CONTENT` empty and use a volume mount `/motd/host.txt`.
+
+#### MOTD_CONTENT
+Works in a similar fashion to `MOTD_CONTENT`, but is only visible when viewing the MOTD.  This can be shown 
+automatically or when the user presses `h`. Mount for complex motd files is `/motd/mymotd.txt`
+
 #### REGION
 
 > "I need every one of you inside, now!"
