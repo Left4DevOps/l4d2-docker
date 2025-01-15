@@ -28,7 +28,7 @@ ENV DEFAULT_MAP=$DEFAULT_MAP \
     INSTALL_DIR=$INSTALL_DIR \
     STEAM_GROUP=0 \
     HOST_CONTENT="" \
-    MOTD_CONTENT="" \
+    MOTD_CONTENT="Play nice, kill zombies" \
     MOTD=0
 
 ADD entrypoint.sh .
