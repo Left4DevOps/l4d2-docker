@@ -3,14 +3,38 @@
 
 cd "${INSTALL_DIR}" || exit 50
 
+if [ "${INSTALL_DIR}" = "l4d2" ]; then
+    GAME_DIR="left4dead2"
+elif [ "${INSTALL_DIR}" = "l4d" ]; then
+    GAME_DIR="left4dead"
+else
+    exit 100
+fi
+
 if [ $# -gt 0 ]; then
     ./srcds_run "$@"
 else
     STARTUP=("./srcds_run")
     STARTUP+=("+sv_logecho 1")
-    STARTUP+=("+motd_enabled 0")
     STARTUP+=("+hostname \"${HOSTNAME}\"")
     STARTUP+=("+sv_region ${REGION}")
+
+    STARTUP+=("+motd_enabled ${MOTD}")
+    if [ -n "${HOST_CONTENT}" ]; then
+      echo "${HOST_CONTENT}" > "${GAME_DIR}/myhost.txt"
+    fi
+    if [[ -e "${GAME_DIR}/myhost.txt" ]]; then
+      STARTUP+=("+hostfile myhost.txt")
+    else
+      echo "${HOSTNAME}" > "${GAME_DIR}/myhostname.txt"
+      STARTUP+=("+hostfile myhostname.txt")
+    fi
+    if [ -n "${MOTD_CONTENT}" ]; then
+      echo "${MOTD_CONTENT}" > "${GAME_DIR}/mymotd.txt"
+    fi
+    if [[ -e "${GAME_DIR}/mymotd.txt" ]]; then
+      STARTUP+=("+motdfile mymotd.txt")
+    fi
 
     if [ "${STEAM_GROUP}" -gt 0 ]; then
         STARTUP+=("+sv_steamgroup ${STEAM_GROUP}")
