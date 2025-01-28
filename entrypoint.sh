@@ -20,20 +20,22 @@ else
     STARTUP+=("+sv_region ${REGION}")
 
     STARTUP+=("+motd_enabled ${MOTD}")
-    if [ -n "${HOST_CONTENT}" ]; then
-      echo "${HOST_CONTENT}" > "${GAME_DIR}/myhost.txt"
-    fi
+
     if [[ -e "${GAME_DIR}/myhost.txt" ]]; then
       STARTUP+=("+hostfile myhost.txt")
+    elif [ -n "${HOST_CONTENT}" ]; then
+      echo "${HOST_CONTENT}" > "${GAME_DIR}/envhost.txt"
+      STARTUP+=("+hostfile envhost.txt")
     else
       echo "${HOSTNAME}" > "${GAME_DIR}/myhostname.txt"
       STARTUP+=("+hostfile myhostname.txt")
     fi
-    if [ -n "${MOTD_CONTENT}" ]; then
-      echo "${MOTD_CONTENT}" > "${GAME_DIR}/mymotd.txt"
-    fi
+
     if [[ -e "${GAME_DIR}/mymotd.txt" ]]; then
       STARTUP+=("+motdfile mymotd.txt")
+    elif [ -n "${MOTD_CONTENT}" ]; then
+      echo "${MOTD_CONTENT}" > "${GAME_DIR}/envmotd.txt"
+      STARTUP+=("+motdfile envmotd.txt")
     fi
 
     if [ "${STEAM_GROUP}" -gt 0 ]; then
