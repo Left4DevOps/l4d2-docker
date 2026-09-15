@@ -6,34 +6,34 @@ curl https://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -xzvf 
 
 # Convenient symlinks for mount points
 if [ "${INSTALL_DIR}" = "l4d2" ]; then
-    GAME_DIR="${INSTALL_DIR}/left4dead2"
+    GAME_DIR="Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/"
+    ln -s "${GAME_DIR}" "./${INSTALL_DIR}"
+    GAME_DIR=${GAME_DIR}left4dead2/
 elif [ "${INSTALL_DIR}" = "l4d" ]; then
-    GAME_DIR="${INSTALL_DIR}/left4dead"
+    GAME_DIR="Steam/steamapps/common/Left 4 Dead Dedicated Server/"
+    ln -s "${GAME_DIR}" "./${INSTALL_DIR}"
+    GAME_DIR=${GAME_DIR}left4dead/
 else
     exit 100
 fi
 
-mkdir -p ./"${GAME_DIR}"
-ln -s /addons         "./${GAME_DIR}/addons"
-ln -s /cfg            "./${GAME_DIR}/cfg"
+mkdir -p Steam
+ln -s /steamapps Steam/steamapps
+
+mv "./${GAME_DIR}/addons/"* /addons
+rm -rf "./${GAME_DIR}/addons/"
+ln -s /addons/ "./${GAME_DIR}/"
+
+mv "./${GAME_DIR}/cfg/"* "/cfg"
+rm -rf "./${GAME_DIR}/cfg/"
+ln -s /cfg/ "./${GAME_DIR}/"
+
 ln -s /motd/host.txt  "./${GAME_DIR}/myhost.txt"
 ln -s /motd/motd.txt  "./${GAME_DIR}/mymotd.txt"
 
-# Install game
-echo """force_install_dir "/home/louis/${INSTALL_DIR}"
+# Update game
+echo """
 login anonymous
 app_update ${GAME_ID}
 quit""" > update.txt
-if [ "${INSTALL_DIR}" = "l4d2" ]; then
-  # https://github.com/ValveSoftware/steam-for-linux/issues/11522
-  echo """force_install_dir "/home/louis/${INSTALL_DIR}"
-  login anonymous
-  @sSteamCmdForcePlatformType windows
-  app_update ${GAME_ID}
-  @sSteamCmdForcePlatformType linux
-  app_update ${GAME_ID} validate
-  quit""" > first-install-l4d2.txt
-  ./steamcmd.sh +runscript first-install-l4d2.txt
-else
-  ./steamcmd.sh +runscript update.txt
-fi
+./steamcmd.sh +runscript update.txt

@@ -1,4 +1,9 @@
-FROM rockylinux/rockylinux:9-minimal AS base
+FROM left4devops/steamcmd AS download
+ARG STEAM_USER=anonymous
+RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
+    ./steamcmd.sh +login $STEAM_USER +app_update 222860 +quit
+
+FROM rockylinux/rockylinux:9-minimal AS server
 
 ADD as-root.sh .
 RUN ./as-root.sh
@@ -6,7 +11,7 @@ RUN ./as-root.sh
 WORKDIR /home/louis
 USER louis
 
-FROM base AS game
+COPY --chown=louis:louis --from=download "/steamapps" "/steamapps"
 
 ARG GAME_ID=222860 \
     INSTALL_DIR="l4d2" \
