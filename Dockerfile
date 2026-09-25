@@ -1,15 +1,23 @@
-FROM left4devops/steamcmd AS download
-ARG STEAM_USER=anonymous
-RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
-    ./steamcmd.sh +login $STEAM_USER +app_update 222860 +quit
-
-FROM rockylinux/rockylinux:9-minimal AS server
+FROM rockylinux/rockylinux:9-minimal AS steamcmd
 
 ADD as-root.sh .
 RUN ./as-root.sh
 
 WORKDIR /home/louis
 USER louis
+
+ADD install-steamcmd.sh .
+RUN ./install-steamcmd.sh
+
+ENTRYPOINT ["./steamcmd.sh"]
+
+FROM steamcmd AS download
+
+ARG STEAM_USER=anonymous
+RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
+    ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login $STEAM_USER +app_update 222860 +quit
+
+FROM steamcmd AS server
 
 COPY --chown=louis:louis --from=download "/steamapps" "/steamapps"
 

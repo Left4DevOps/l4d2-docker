@@ -1,10 +1,5 @@
 #!/bin/bash
-# Install steamcmd
-mkdir -p .steam/sdk32/
-ln -s ~/linux32/steamclient.so ~/.steam/sdk32/steamclient.so
-curl https://media.steampowered.com/installer/steamcmd_linux.tar.gz | tar -xzvf -
 
-# Convenient symlinks for mount points
 if [ "${INSTALL_DIR}" = "l4d2" ]; then
     GAME_DIR="Steam/steamapps/common/Left 4 Dead 2 Dedicated Server/"
     ln -s "${GAME_DIR}" "./${INSTALL_DIR}"
@@ -16,9 +11,6 @@ elif [ "${INSTALL_DIR}" = "l4d" ]; then
 else
     exit 100
 fi
-
-mkdir -p Steam
-ln -s /steamapps Steam/steamapps
 
 mv "./${GAME_DIR}/addons/"* /addons
 rm -rf "./${GAME_DIR}/addons/"

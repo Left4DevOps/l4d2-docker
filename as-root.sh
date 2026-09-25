@@ -2,7 +2,8 @@
 microdnf -y install SDL2.i686 \
     libcurl.i686 \
     glibc-langpack-en \
-    tar
+    tar \
+    unzip
 microdnf -y update
 microdnf clean all
 
