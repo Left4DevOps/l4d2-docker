@@ -41,6 +41,7 @@ RUN unzip pup.zip \
     && rm pup.zip \
     && mv pup /usr/local/bin \
     && mkdir -p /addons/workshop && chown -R louis:louis /addons
-ENV STEAM_USER=anonymous    #User must own the game
+ENV STEAM_USER=anonymous \
+    WORKSHOP_ITEM=0
 ADD workshop-downloader.sh .
 ENTRYPOINT ["./workshop-downloader.sh"]
