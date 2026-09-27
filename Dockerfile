@@ -36,11 +36,8 @@ ADD entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
 
 FROM steamcmd AS workshop
-ADD https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip pup.zip
-RUN unzip pup.zip \
-    && rm pup.zip \
-    && mv pup /usr/local/bin \
-    && mkdir -p /addons/workshop && chown -R louis:louis /addons
+ADD workshop-user.sh as-user.sh
+RUN ./as-user.sh
 ENV STEAM_USER=anonymous \
     WORKSHOP_ITEM=0
 ADD workshop-downloader.sh .
