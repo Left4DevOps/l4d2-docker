@@ -8,6 +8,8 @@ elif [ "${INSTALL_DIR}" = "l4d" ]; then
     GAME_DIR="Steam/steamapps/common/Left 4 Dead Dedicated Server/"
     ln -s "${GAME_DIR}" "./${INSTALL_DIR}"
     GAME_DIR=${GAME_DIR}left4dead/
+    rm -rf /addons/workshop
+    rm -f workshop-downloader.sh
 else
     exit 100
 fi

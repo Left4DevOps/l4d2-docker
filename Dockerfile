@@ -5,12 +5,16 @@ WORKDIR /home/louis
 USER louis
 ADD install-steamcmd.sh .
 RUN ./install-steamcmd.sh
-ENTRYPOINT ["./steamcmd.sh"]
+ENV STEAM_USER=anonymous \
+    WORKSHOP_ITEM=0
+ADD workshop-downloader.sh steamcmd-entrypoint.sh ./
+ENTRYPOINT ["./steamcmd-entrypoint.sh"]
 
 FROM steamcmd AS download
-ARG STEAM_USER=anonymous
+ARG STEAM_USER=anonymous \
+    GAME_ID=222860
 RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
-    ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login $STEAM_USER +app_update 222860 +quit
+    ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login $STEAM_USER +app_update $GAME_ID +quit
 
 FROM steamcmd AS server
 COPY --chown=louis:louis --from=download "/steamapps" "/steamapps"
@@ -34,11 +38,3 @@ ENV DEFAULT_MAP=$DEFAULT_MAP \
     MOTD=0
 ADD entrypoint.sh .
 ENTRYPOINT ["./entrypoint.sh"]
-
-FROM steamcmd AS workshop
-ADD workshop-user.sh as-user.sh
-RUN ./as-user.sh
-ENV STEAM_USER=anonymous \
-    WORKSHOP_ITEM=0
-ADD workshop-downloader.sh .
-ENTRYPOINT ["./workshop-downloader.sh"]

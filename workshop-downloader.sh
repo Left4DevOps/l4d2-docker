@@ -18,7 +18,7 @@ check_for_collections() {
 	fi
 
 	local items
-	items=($(echo "${source}" | pup '.collectionItemDetails > a attr{href}'))
+	items=($(echo "${source}" | .local/bin/pup '.collectionItemDetails > a attr{href}'))
 
 	if [ ${#items[@]} -gt 0 ]; then #it's a collection, check for nested collections
 		echo "collection - ${1}"
@@ -27,9 +27,9 @@ check_for_collections() {
 		done
 	else # assume item, let's check if we need to download it
 		echo "item - ${1}"
-		workshopItemTitle=$(echo "${source}" | pup ".workshopItemTitle text{}")
+		workshopItemTitle=$(echo "${source}" | .local/bin/pup ".workshopItemTitle text{}")
 		echo "Downloading ${workshopItemTitle} ${1}"
-		bin_path=$(./steamcmd.sh +login ${STEAM_USERNAME} +workshop_download_item 550 "${1}" +quit | grep "Success. " | awk -F'"' '{print $2}')
+		bin_path=$(./steamcmd.sh +login "${STEAM_USERNAME}" +workshop_download_item 550 "${1}" +quit | grep "Success. " | awk -F'"' '{print $2}')
 		if [ ! -f "${WORKSHOP_FOLDER}/${1}.vpk" ]; then
 			touch "${bin_path}"
 			mv "${bin_path}" "${WORKSHOP_FOLDER}/${1}.vpk"
@@ -38,9 +38,9 @@ check_for_collections() {
 	fi
 }
 
-if ! ./steamcmd.sh +login ${STEAM_USERNAME} +quit; then
+if ! ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login "${STEAM_USERNAME}" +quit; then
 	echo "Could not login as ${STEAM_USERNAME}"
 	exit 1
 fi
 
-check_for_collections "${WORKSHOP_ITEM}"
+check_for_collections "${1}"

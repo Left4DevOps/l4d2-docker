@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ "${WORKSHOP_ITEM}" -gt 0 ]; then
+  ./workshop-downloader.sh "${WORKSHOP_ITEM}"
+fi
+
 ./steamcmd.sh +runscript update.txt
 
 cd "${INSTALL_DIR}" || exit 50
