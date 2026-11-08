@@ -1,24 +1,31 @@
-FROM rockylinux/rockylinux:9-minimal AS base
-
+FROM rockylinux/rockylinux:9-minimal AS steamcmd
 ADD as-root.sh .
 RUN ./as-root.sh
-
 WORKDIR /home/louis
 USER louis
+COPY install-steamcmd.sh .
+RUN ./install-steamcmd.sh
+ENV STEAM_USER=anonymous \
+    WORKSHOP_ITEM=0
+COPY workshop-downloader.sh .
+COPY steamcmd-entrypoint.sh entrypoint.sh
+ENTRYPOINT ["./entrypoint.sh"]
 
-FROM base AS game
+FROM steamcmd AS download
+ARG STEAM_USER=anonymous \
+    GAME_ID=222860
+RUN --mount=type=secret,uid=1000,gid=1000,id=steam,target=/home/louis/Steam/config/config.vdf \
+    ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login $STEAM_USER +app_update $GAME_ID +quit
 
+FROM steamcmd AS server
+COPY --chown=louis:louis --from=download "/steamapps" "/steamapps"
 ARG GAME_ID=222860 \
     INSTALL_DIR="l4d2" \
     DEFAULT_MAP="c14m1_junkyard"
-
 EXPOSE 27015/tcp 27015/udp
-
-ADD as-user.sh .
+COPY as-user.sh .
 RUN ./as-user.sh
-
 VOLUME ["/addons", "/cfg"]
-
 ENV DEFAULT_MAP=$DEFAULT_MAP \
     DEFAULT_MODE="coop" \
     PORT=0 \
@@ -30,6 +37,4 @@ ENV DEFAULT_MAP=$DEFAULT_MAP \
     HOST_CONTENT="" \
     MOTD_CONTENT="Play nice, kill zombies" \
     MOTD=0
-
-ADD entrypoint.sh .
-ENTRYPOINT ["./entrypoint.sh"]
+COPY entrypoint.sh .
