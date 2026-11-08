@@ -1,5 +1,8 @@
 #!/bin/bash
-WORKSHOP_FOLDER="/addons/workshop"
+
+set -e
+
+WORKSHOP_FOLDER="/addons/workshop
 
 get_workshop_id() {
 	id=${1##*=}
@@ -26,14 +29,15 @@ check_for_collections() {
 			check_for_collections "$(get_workshop_id "${item}")"
 		done
 	else # assume item, let's check if we need to download it
-		echo "item - ${1}"
+		echo -n " * item - ${1}: "
 		workshopItemTitle=$(echo "${source}" | .local/bin/pup ".workshopItemTitle text{}")
-		echo "Downloading ${workshopItemTitle} ${1}"
-		bin_path=$(./steamcmd.sh +login "${STEAM_USER}" +workshop_download_item 550 "${1}" +quit | grep "Success. " | awk -F'"' '{print $2}')
+		echo " ${workshopItemTitle}"
+		bin_path=$(./steamcmd.sh +login "${STEAM_USER}" +workshop_download_item ${APP_ID:550} "${1}" +quit | grep "Success. " | awk -F'"' '{print $2}')
 		if [ ! -f "${WORKSHOP_FOLDER}/${1}.vpk" ]; then
 			touch "${bin_path}"
 			mv "${bin_path}" "${WORKSHOP_FOLDER}/${1}.vpk"
 			ln -s "${WORKSHOP_FOLDER}/${1}.vpk" "${bin_path}"
+			echo "${1} - ${workshopItemTitle}" >> "${WORKSHOP_FOLDER}/maps.txt"
 		fi
 	fi
 }
