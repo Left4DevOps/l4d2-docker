@@ -2,7 +2,7 @@
 
 set -e
 
-WORKSHOP_FOLDER="/addons/workshop
+WORKSHOP_FOLDER="/addons/workshop"
 
 get_workshop_id() {
 	id=${1##*=}
