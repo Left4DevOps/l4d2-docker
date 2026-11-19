@@ -1,25 +1,34 @@
 # Left 4 Dead / Left 4 Dead 2 Dedicated Server Docker Image
-
 > "Oh, MAN! This is just like Counter-Strike!"
 
 This repository can be used to build docker images for both Left 4 Dead and Left 4 Dead 2. You can use this repository
 to build these images yourself, or pull them from our registry on [Docker Hub](https://hub.docker.com/u/left4devops).
 
 ## Getting Started
-
 Running a vanilla server can as simple as running:
 
 ```shell
-docker run --name l4d2 \
+docker run -it --name l4d2 \
     --network host \
 left4devops/l4d2
 ```
 
+If you started your container with `-it` arguments, you can also access the game server console using 
+```shell
+docker attach l4d2
+```
+If nothing is currently happening, you will see a blank screen, but you will be able to type in commands like `status`.
+
+Pressing `ctrl + c` will quit the running server, so if you want to leave the leave container without exiting, press
+`ctrl + p` then `ctrl + q` in short succession.
+
+## Networking 
 > [!IMPORTANT]
-> The above example uses host networking (`--network host`), which is the preferred networking method, as it allows the 
-> game server to correctly identify the IP of connecting players and can be used to ban players or anyone on the net 
-> attempting to force access to RCON. To use host networking on windows or macOS, **enable host networking** from 
-> [experimental features](https://docs.docker.com/network/network-tutorial-host/#prerequisites) in Docker version 4.29.
+> Host networking (`--network host`), the preferred networking method, allows the game server to correctly identify the 
+IP of connecting players and can be used to ban players or anyone on the net attempting to force access to RCON. To use
+it with Docker Desktop on Windows or macOS you must
+[turn it on](https://docs.docker.com/engine/network/drivers/host/#docker-desktop) from: **Settings** > **Resources** >
+**Network** > **Enable host networking** > **Apply and restart**.
 
 ### Bridge Networking Mode
 Although the game server won't be able to correctly identify player's IP correctly, you can use Docker's default bridge
@@ -32,8 +41,7 @@ docker run --name l4d2-bridged \
 left4devops/l4d2
 ```
 
-### Restart behaviour
-
+## Restart Behaviour
 > "Someone needs to restart that generator!"
 
 `srcds_run` includes a watchdog to restart the server process in the event of a crash. However, you may want to include
@@ -45,15 +53,7 @@ docker run --name l4d2-reboot \
 left4devops/l4d2
 ```
 
-### Denial of Service Protection
-
-> "But you know, as long as I have a Molotov I can make a firewall!"
-
-This section is in draft, see the [discussion here](https://github.com/Left4DevOps/l4d2-docker/issues/6) for more
-detail.
-
 ## Joining a game
-
 There are a couple of ways you can achieve this:
 
 * Start a lobby, then as host, set the server type to **Best Available Dedicated**, open the developer console and
@@ -65,16 +65,60 @@ There are a couple of ways you can achieve this:
 * You can also open the Server Browser from steam under **View** > **Game Servers**.
 * Servers on your LAN will be shown as Steam Group servers automatically
 
-## Custom Addons
+## Denial of Service Protection
+> "But you know, as long as I have a Molotov I can make a firewall!"
 
+You can harden the game server using some, or all of the options below. IP Tables on Linux comes highly recommended.
+
+| Platform      | Option                                                                                                                        |
+|---------------|-------------------------------------------------------------------------------------------------------------------------------|
+| Linux         | [Sir Please's IP Tables](https://github.com/SirPlease/IPTables/)                                                              |
+| Linux/Windows | [SourceMod](https://www.sourcemod.net) with [Plugins](https://forums.alliedmods.net/showthread.php?t=196990)                  |
+| Linux         | Use a host with built in DDoS protection. [Linode (Akamai) offer $100 free credit](https://www.akamai.com/lp/free-credit-100) |
+| All           | Change to a non standard port                                                                                                 |
+| All           | Use `-nomaster` to skip listing you server on Valve's master server list                                                      |
+
+## Custom Addons
 If you wanted to play a custom campaign on your server, or include sourcemod, you can mount a directory with any custom
 content into the `/addons/` directory.
 
-e.g. If your working directory had a addons folder:
+e.g. If your working directory had an addons folder:
 
 ```shell
 docker run --name l4d2-server-addons \
     -v $(pwd)/addons:/addons/
+left4devops/l4d2
+```
+
+### Workshop Addons
+You can now sync the server with a workshop item or collection for L4D2. This requires:
+* a `STEAM_USER` of someone who owns the game. You can either be prompted for your password and MFA token, or mount a 
+* config.vdf file
+* the `WORKSHOP_ITEM` containing the public item or collection you want to download
+
+e.g. If you wanted to download [Cold Front](https://steamcommunity.com/workshop/filedetails/?id=3135470026) you would 
+grab the id from the workshop URL, and supply your username:
+
+```shell
+docker run --name l4d2-server-workshop \
+  -it \
+  -e STEAM_USER=GabeN \
+  -e WORKSHOP_ITEM=3135470026 \
+left4devops/l4d2
+```
+
+The `config.vdf` can be reused between containers to avoid needing to provide credentials every time:
+
+```shell
+touch config.vdf
+chmod 600 config.vdf
+chown 1000:1000 config.vdf
+
+docker run --name l4d2-server-workshop-config \
+  -it \
+  -e STEAM_USER=GabeN \
+  -e WORKSHOP_ITEM=3135470026 \
+  - v config.vdf:/home/louis/Steam/config/config.vdf \
 left4devops/l4d2
 ```
 
@@ -84,7 +128,6 @@ left4devops/l4d2
 You can pass environment variables to your Docker Container to configure a number of common settings.
 
 #### HOSTNAME
-
 This is the name of you server, as shown in the Server Browser and Steam Group Servers. Defaults to **Left4DevOps**.
 
 To change your hostname to **BILLS HERE**:
@@ -102,7 +145,7 @@ you run a lot of gameplay mods on your server, it can gbe helpful to outline the
 #### HOST_CONTENT
 This is the slim banner shown at the top of the MOTD. In L4D1, it is also shown when players hold the `TAB` key.
 
-Can display plain text or a http URL. Neither game understands https (although L4D2 can redirect to a https url).
+Can display plain text or an http URL. Neither game understands https (although L4D2 can redirect to a https url).
 
 By default, will show the hostname of your server. For simple banners, `HOST_CONTENT` using the environment variable.
 For more complex host banners, leave `HOST_CONTENT` empty and use a volume mount `/motd/host.txt`.
@@ -112,7 +155,6 @@ Works in a similar fashion to `MOTD_CONTENT`, but is only visible when viewing t
 automatically or when the user presses `h`. Mount for complex motd files is `/motd/motd.txt`
 
 #### REGION
-
 > "I need every one of you inside, now!"
 
 To help hint to Steam where your server is located, set the `REGION` environment variable as one of the following
@@ -139,7 +181,6 @@ left4devops/l4d2
 ```
 
 #### STEAM_GROUP
-
 Make your server easier to join, by attaching it to a Steam Group. Steam Group Servers are shown in the bottom right
 corner of the Game menu and can be easily picked as a hosting option in Left 4 Dead 2. In game, players can press `h` to
 show the message of the day and then join your steam group, so they can find it again in the future. You can find the ID 
@@ -152,7 +193,6 @@ left4devops/l4d2
 ```
 
 ##### STEAM_GROUP_EXCLUSIVE
-
 Normally, your server will be available for anyone using the **Best Available Dedicated** setting in their lobby. You
 can prevent this by setting `STEAM_GROUP_EXCLUSIVE` to true. Any member of your group will be able to start a game as
 lobby leader.
@@ -165,10 +205,9 @@ left4devops/l4d2
 ```
 
 > [!NOTE]
-> Non members can still pick your server using `mm_dedicated_force_servers`
+> Non-members can still pick your server using `mm_dedicated_force_servers`
 
 #### PORT
-
 The game should find the next free port after 27015 to host the game on.  If using bridge networking, 27015 will usually
 be picked automatically, as no other services should be running in the container. You may prefer to hardcode the game
 port to simply your port forwarding or firewall configuration. Simply set `PORT` to your desired port.  Game traffic and
@@ -204,11 +243,10 @@ docker run --name l4d2-port-var \
 left4devops/l4d2
 ```
 > [!WARNING]
-> When publishing your ports with bridge networking, ensure the same port is used for both client and host. Otherwise
+> When publishing your ports with bridge networking, ensure the same port is used for both client and host. Otherwise,
 > matchmaking will advertise the wrong port and new players will not be able to connect
 
 #### DEFAULT_MAP
-
 Can be used to set the map when the server is first loaded. Defaults to the newest map for each game. The map names are
 different in each game. You can get a full list of maps names by typing `maps` in your Developer Console. To start your
 L4D2 server on Dead Center:
@@ -220,7 +258,6 @@ left4devops/l4d2
 ```
 
 #### DEFAULT_MODE
-
 Sets the mode used by your server when it is first loaded. Defaults to coop, but can be changed from a lobby.
 
 ```shell
@@ -230,7 +267,6 @@ left4devops/l4d2
 ```
 
 #### GAME_TYPES
-
 Can be used to limit which game modes can be played on your server. Leave unspecified to allow all game modes. Values
 include `coop,realism,survival,versus,scavenge,dash,holdout,shootzones`
 
@@ -241,7 +277,6 @@ left4devops/l4d2
 ```
 
 #### FORK
-
 Run multiple games from the same container, with ports being automatically allocated by default. The `PORT` variable is 
 ignored. You can customise the behaviour of the different instances by mounting multiple **server##.cfg** files.
 
@@ -255,7 +290,6 @@ left4devops/l4d2
 ```
 
 #### LAN
-
 Runs the server without needing to talk to Steam, but connecting players need a local IP address.
 
 ```shell
@@ -266,7 +300,6 @@ left4devops/l4d2
 ```
 
 #### RCON_PASSWORD
-
 > Son, we're immune, we're tired, and there's infected in the damn woods. Now cut the shit and let us in!
 
 To issue commands to the server whilst you're playing on it, set an RCON password. Logging into a server with RCON also
@@ -292,7 +325,6 @@ rcon
 > networking.
 
 #### NET_CON_PORT
-
 Similar to RCON, the Network Console allows you to administrator your server, but using a `telnet` client. If not using
 a password, I would strongly recommend using a firewall to block public access to the port. To start listening on port
 17017:
@@ -328,14 +360,7 @@ telnet localhost 17015
 PASS cuttheshitandletusin
 ```
 
-A telnet client is included in the image so you can connect using `docker exec`:
-
-```shell
-docker exec -it l4d2 telnet localhost 17015
-```
-
 #### EXTRA_ARGS
-
 Got a small number of other settings you want to add? To spawn larger mobs more frequently:
 
 ```shell
@@ -345,7 +370,6 @@ left4devops/l4d2
 ```
 
 ### server.cfg
-
 `srcds_run` will look for a `server.cfg` file. If you have lots of config, store them in a file and mount it to
 `/cfg/server.cfg`.
 
@@ -356,7 +380,6 @@ left4devops/l4d2
 ```
 
 ### Command line replacement
-
 You can completely replace the guided environment variable configuration by providing arguments when starting the
 container
 
@@ -365,3 +388,17 @@ docker run --name l4d2-command-line \
 left4devops/l4d2 +hostname "Vannah Hotel"
 ```
 
+## Building this image
+For your convenience, you can build this project using the following bash scripts:
+* `./build-l4d.sh`
+* `./build-l4d2.sh`
+* `./build-steamcmd.sh`
+
+Due to an [open bug](https://github.com/ValveSoftware/steam-for-linux/issues/11522) L4D2 won't reliably install
+anonymously. You can set your steam account username (assuming you own the game) when running the build script via an
+inline variable. This will write your auth data to a config.vdf in the repository folder which is not included in the
+final image output. Once the files are downloaded, the files are copied via a multistage build to a clean image and
+should not leave any auth fingerprints in the created image, and can be updated anonymously. 
+```shell
+STEAM_USER=gaben ./build-l4d2.sh
+```
