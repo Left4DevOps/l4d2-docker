@@ -402,3 +402,15 @@ should not leave any auth fingerprints in the created image, and can be updated 
 ```shell
 STEAM_USER=gaben ./build-l4d2.sh
 ```
+
+## Use this image as a base image
+If you wanted to bundle mods into the image, or change the entrypoint, you can use this image as a base image
+for your project.
+
+```Dockerfile
+FROM left4devops/l4d2
+
+ADD entrypoint.sh  .
+
+ADD mods/* /addons/.
+```
