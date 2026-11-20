@@ -11,6 +11,7 @@ ln -s /steamapps Steam/steamapps
 cd .local/bin
 
 curl -L https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip -o pup.zip
+echo 'ec3d29e9fb375b87ac492c8b546ad6be84b0c0b49dab7ff4c6b582eac71ba01c pup.zip' | sha256sum -c
 unzip pup.zip
 rm -f pup.zip
 
