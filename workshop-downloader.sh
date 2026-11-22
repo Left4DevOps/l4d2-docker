@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+WORKSHOP_FOLDER="/addons/workshop"
+
+get_workshop_id() {
+	id=${1##*=}
+  echo "$id"
+}
+
+check_for_collections() {
+	local code
+	local source
+	code=$(curl -s -o /tmp/workshop.html -w "%{response_code}" "https://steamcommunity.com/sharedfiles/filedetails/?id=${1}")
+	source=$(cat /tmp/workshop.html)
+
+	if [ "${code}" -ge 400 ]; then
+		echo "A ${code} error occurred"
+		return
+	fi
+
+	local items
+	items=($(echo "${source}" | .local/bin/pup '.collectionItemDetails > a attr{href}'))
+
+	if [ ${#items[@]} -gt 0 ]; then #it's a collection, check for nested collections
+		echo "collection - ${1}"
+		for item in "${items[@]}"; do
+			check_for_collections "$(get_workshop_id "${item}")"
+		done
+	else # assume item, let's check if we need to download it
+		echo -n " * item - ${1}: "
+		workshopItemTitle=$(echo "${source}" | .local/bin/pup ".workshopItemTitle text{}")
+		echo " ${workshopItemTitle}"
+		bin_path=$(./steamcmd.sh +login "${STEAM_USER}" +workshop_download_item ${APP_ID:550} "${1}" +quit | grep "Success. " | awk -F'"' '{print $2}')
+		if [ ! -f "${WORKSHOP_FOLDER}/${1}.vpk" ]; then
+			touch "${bin_path}"
+			mv "${bin_path}" "${WORKSHOP_FOLDER}/${1}.vpk"
+			ln -s "${WORKSHOP_FOLDER}/${1}.vpk" "${bin_path}"
+			echo "${1} - ${workshopItemTitle}" >> "${WORKSHOP_FOLDER}/maps.txt"
+		fi
+	fi
+}
+
+if ! ./steamcmd.sh +@ShutdownOnFailedCommand 1 +login "${STEAM_USER}" +quit; then
+	echo "Could not login as ${STEAM_USER}"
+	exit 1
+fi
+
+check_for_collections "${1}"
